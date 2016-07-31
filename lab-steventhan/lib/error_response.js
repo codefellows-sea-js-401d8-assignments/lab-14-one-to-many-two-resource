@@ -12,7 +12,7 @@ let errorResponse = (req, res, next) => {
         msg: error.clientMessage
       });
     }
-    serverLog(error);
+    serverLog(error.message);
     return res.status(500).json({
       status: 500,
       msg: 'Internal Server Error'

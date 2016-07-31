@@ -9,17 +9,23 @@ const AppError = require('../lib/app_error');
 
 let userRouter = new Router();
 
-userRouter.get('/all', (req, res) => {
+userRouter.get('/all', (req, res, next) => {
   User.find()
-    .then(res.json.bind(res));
+    .then(res.json.bind(res))
+    .catch((error) => {
+      next(AppError.new500('Internal Server Error', `Server error. ${error.message}`));
+    });
 });
 
 userRouter.get('/:id', (req, res, next) => {
   let _id = req.params.id;
-  User.find({_id})
-    .then(res.json.bind(res))
+  User.findOne({_id})
+    .then((data) => {
+      if (!data) return next(AppError.new404('Not Found', `Invalid user id: ${_id} from input.`));
+      return res.json(data);
+    })
     .catch((error) => {
-      next(AppError.new404('Not Found', `Invalid user id from input. ${error.message}`));
+      next(AppError.new404('Not Found', `Invalid user id: ${_id} from input. ${error.message}`));
     });
 });
 
@@ -41,13 +47,27 @@ userRouter.put('/:id', jsonParser, (req, res, next) => {
   let _id = req.params.id;
   if (parsedJson.firstName && parsedJson.lastName && parsedJson.email) {
     User.findOneAndUpdate({_id}, parsedJson)
-      .then(res.json.bind(res))
+      .then((data) => {
+        if (!data) return next(AppError.new404('Not Found', `Invalid user id: ${_id} from input.`));
+        return res.json(data);
+      })
       .catch((error) => {
-        next(AppError.new404('Not Found', `Invalid user id from input. ${error.message}`));
+        next(AppError.new404('Not Found', `Invalid user id: ${_id} from input. ${error.message}`));
       });
   } else {
     next(AppError.new400('Invalid JSON', 'Invalid object properties received from put JSON'));
   }
 });
 
+userRouter.delete('/:id', (req, res, next) => {
+  let _id = req.params.id;
+  User.findByIdAndRemove({_id})
+    .then((data) => {
+      if (!data) return next(AppError.new404('Not Found', `Invalid user id: ${_id} from input.`));
+      return res.json(data);
+    })
+    .catch((error) => {
+      next(AppError.new404('Not Found', `Invalid user id: ${_id} from input. ${error.message}`));
+    });
+});
 module.exports = userRouter;
