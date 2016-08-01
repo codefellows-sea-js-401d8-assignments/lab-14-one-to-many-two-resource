@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-// const errResponse = require('./lib/error_response');
 const debug = require('debug');
 const Promise = require('./lib/promise');
 const serverError = debug('lab14:servererror');
@@ -18,7 +17,6 @@ const DB_SERVER = process.env.DB_SERVER || LOCAL_DB_SERVER;
 mongoose.Promise = Promise;
 mongoose.connect(DB_SERVER);
 
-// app.use(errResponse());
 app.use(morgan('dev'));
 
 app.use('/api/environment', envRouter);

@@ -1,4 +1,5 @@
 const server = require('./server');
 
-server.listen(3000, () => { console.log('server up on 3000');
+server.listen(3000, () => {
+  console.log('server up on 3000');
 });
