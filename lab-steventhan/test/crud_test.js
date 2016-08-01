@@ -17,27 +17,7 @@ let testOrder, testUser;
 
 before((done) => {
   server = require('../_server').listen(port);
-
-  User({
-    firstName: 'Test',
-    lastName: 'User',
-    email: 'test@example.com'
-  }).save()
-    .then((data) => {
-      testUser = data;
-    });
-  Order({
-    orderDate: '2016-07-31',
-    comment: 'Please ship everything at once',
-    shippingMethod: 'Economy',
-    status: 'Received',
-    userId: null
-  }).save()
-    .then((data) => {
-      testOrder = data;
-      done();
-    });
-
+  done();
 });
 
 after((done) => {
@@ -61,6 +41,27 @@ describe('The 404 error handling', () => {
 });
 
 describe('The two-resource CRUD api', () => {
+  before((done) => {
+    User({
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@example.com'
+    }).save()
+      .then((data) => {
+        testUser = data;
+        Order({
+          orderDate: '2016-07-31',
+          comment: 'Please ship everything at once',
+          shippingMethod: 'Economy',
+          status: 'Received',
+          userId: null
+        }).save()
+          .then((data) => {
+            testOrder = data;
+            done();
+          });
+      });
+  });
   describe('the userRouter', () => {
     it('GET /api/users/all should show all users in database', (done) => {
       request('localhost:' + port)
@@ -268,7 +269,7 @@ describe('The two-resource CRUD api', () => {
         });
     });
 
-    it('PUT /api/users/:id should return 404 if valid object is put at wrong orderId', (done) => {
+    it('PUT /api/orders/:id should return 404 if valid object is put at wrong orderId', (done) => {
       request('localhost:' + port)
         .put('/api/orders/someid')
         .send({
@@ -316,5 +317,141 @@ describe('The two-resource CRUD api', () => {
           done();
         });
     });
+  });
+});
+
+describe('the userOrderRouter', () => {
+  before((done) => {
+    User({
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@example.com'
+    }).save()
+      .then((data) => {
+        testUser = data;
+        Order({
+          orderDate: '2016-07-31',
+          comment: 'Please ship everything at once',
+          shippingMethod: 'Economy',
+          status: 'Received',
+          userId: testUser._id
+        }).save()
+          .then((data) => {
+            testOrder = data;
+            done();
+          });
+      });
+  });
+
+  it('GET /api/users/userId/orders should show all orders that belong to the testUser', (done) => {
+    request('localhost:' + port)
+      .get(`/api/users/${testUser._id}/orders`)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res.body.length).to.eql(1);
+        done();
+      });
+  });
+
+  it('GET /api/users/randomid/orders should return a 404 error', (done) => {
+    request('localhost:' + port)
+      .get('/api/users/randomid/orders')
+      .end((err, res) => {
+        expect(err.message).to.eql('Not Found');
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it('POST /api/users/userId/orders should create new order with the userId attached to that order', (done) => {
+    request('localhost:' + port)
+      .post(`/api/users/${testUser._id}/orders`)
+      .send({
+        comment: 'Test 2',
+        shippingMethod: 'Post'
+      })
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res).to.have.status(200);
+        Order.findOne({_id: res.body._id})
+          .then((data) => {
+            expect(data.comment).to.eql('Test 2');
+            expect(data.shippingMethod).to.eql('Post');
+            done();
+          });
+      });
+  });
+
+  it('POST /api/users/userId/orders return 400 if invalid object is posted', (done) => {
+    request('localhost:' + port)
+      .post(`/api/users/${testUser._id}/orders`)
+      .send()
+      .end((err, res) => {
+        expect(err.message).to.eql('Bad Request');
+        expect(res).to.have.status(400);
+        done();
+      });
+  });
+
+  it('DELETE /api/users/userId/orders/orderId should remove the userId from the order object', (done) => {
+    request('localhost:' + port)
+      .delete(`/api/users/${testUser._id}/orders/${testOrder._id}`)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res).to.have.status(200);
+        Order.findOne({_id: testOrder._id})
+          .then((data) => {
+            expect(data.userId).to.eql(null);
+            done();
+          });
+      });
+  });
+
+  it('DELETE /api/users/userId/orders/orderId should should return 404 if invalid userId is sent', (done) => {
+    request('localhost:' + port)
+      .delete(`/api/users/invalid/orders/${testOrder._id}`)
+      .end((err, res) => {
+        expect(err.message).to.eql('Not Found');
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it('PUT /api/users/userId/orders add the order under the user url', (done) => {
+    request('localhost:' + port)
+      .put(`/api/users/${testUser._id}/orders/${testOrder._id}`)
+      .send()
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res).to.have.status(200);
+        Order.findOne({_id: testOrder._id})
+          .then((data) => {
+            expect(data.userId).to.eql(testUser._id);
+            done();
+          });
+        done();
+      });
+  });
+
+  it('PUT /api/users/userId/orders should return 404 if invalid userId is put at existing orderId', (done) => {
+    request('localhost:' + port)
+      .put(`/api/users/invalid/orders/${testOrder._id}`)
+      .send()
+      .end((err, res) => {
+        expect(err.message).to.eql('Not Found');
+        expect(res).to.have.status(404);
+        done();
+      });
+  });
+
+  it('PUT /api/users/userId/orders should return 404 if valid userId is put at unexisting orderId', (done) => {
+    request('localhost:' + port)
+      .put(`/api/users/${testUser._id}/orders/notexisting`)
+      .send()
+      .end((err, res) => {
+        expect(err.message).to.eql('Not Found');
+        expect(res).to.have.status(404);
+        done();
+      });
   });
 });

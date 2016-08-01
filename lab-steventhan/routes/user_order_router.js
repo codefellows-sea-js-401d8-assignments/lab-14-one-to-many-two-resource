@@ -29,6 +29,8 @@ userOrderRouter.post('/', jsonParser, (req, res, next) => {
       .catch((error) => {
         next(AppError.new400('Bad Request', `${error.message}`));
       });
+  } else {
+    next(AppError.new400('Invalid JSON', 'Invalid object properties received from posted JSON'));
   }
 });
 
