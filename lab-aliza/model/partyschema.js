@@ -22,7 +22,7 @@ PartySchema.methods.removePanda = function(pandaId) {
 };
 
 PartySchema.methods.findAllPandas = function() {
-  return Panda.find({forestId: this._id});
+  return Panda.find({partyId: this._id});
 };
 
 module.exports = exports = mongoose.model('party', PartySchema);
