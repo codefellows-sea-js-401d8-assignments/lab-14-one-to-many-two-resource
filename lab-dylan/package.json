@@ -19,5 +19,8 @@
     "gulp-mocha": "^2.2.0",
     "gulp-nodemon": "^2.1.0",
     "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.1"
   }
 }

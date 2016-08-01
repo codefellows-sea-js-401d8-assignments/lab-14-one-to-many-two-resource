@@ -1,7 +1,6 @@
 'use strict';
 const express = require('express');
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+const jsonParser = require('body-parser').json();
 const appError = require('../lib/AppError');
 const Environment = require('../model/environment');
 const debug = require('debug');
