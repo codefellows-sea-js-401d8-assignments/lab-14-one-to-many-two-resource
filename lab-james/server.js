@@ -11,12 +11,12 @@ mongoose.Promise = Promise;
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/wow_db');
 
 const heroRouter = require('./routes/hero_router');
-// const zoneRouter = require('./routes/zoneRouter');
+const zoneRouter = require('./routes/zone_router');
 
 app.use(errorResponse());
 app.use(morgan('dev'));
 app.use('/api/hero', heroRouter);
-// app.use('/api/zone', zoneRouter);
+app.use('/api/zone', zoneRouter);
 
 app.use((req, res) => {
   return res.sendError(AppError.status404('page not found'));
