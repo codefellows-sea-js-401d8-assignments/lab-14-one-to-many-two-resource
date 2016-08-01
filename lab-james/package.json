@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "body-parser": "^1.15.2",
+    "chai-http": "^3.0.0",
     "morgan": "^1.7.0",
     "promise": "^7.1.1"
   }

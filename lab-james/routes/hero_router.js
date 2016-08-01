@@ -43,7 +43,7 @@ heroRouter.put('/:id', jsonParser, (req, res) => {
       return res.sendError(AppError.status404('No hero found'));
     if (hero === null)
       return res.sendError(AppError.status404('No hero found'));
-    res.json(hero);
+    res.json('updated ' + hero.name);
   });
 });
 

@@ -44,7 +44,7 @@ zoneRouter.put('/:id', jsonParser, (req, res) => {
       return res.sendError(AppError.status404('Zone not found'));
     if (zone === null)
       return res.sendError(AppError.status404('Zone not found'));
-    res.json(zone);
+    res.json('updated ' + zone.name);
   });
 });
 
