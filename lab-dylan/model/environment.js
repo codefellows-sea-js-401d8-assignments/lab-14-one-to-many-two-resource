@@ -25,5 +25,9 @@ EnvironmentSchema.methods.findAllPokemon = function() {
   return Pokemon.find({envId: this._id});
 };
 
+EnvironmentSchema.methods.findOnePokemon = function(pokemonId) {
+  return Pokemon.findOne({envId: this._id, _id:pokemonId});
+};
+
 
 module.exports = exports = mongoose.model('environment', EnvironmentSchema);
