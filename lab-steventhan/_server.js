@@ -7,7 +7,7 @@ const userRouter = require('./routes/user_router');
 const orderRouter = require('./routes/order_router');
 const errorResponse = require('./lib/error_response');
 
-mongoose.connect('mongodb://localhost/dev_db');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/dev_db');
 
 server.get('/', (req, res) => {
   res.send('For user api, navigate to \'/api/users\'. For order api, navigate to \'/api/orders\'');
@@ -23,7 +23,10 @@ server.use('/api/orders', orderRouter);
 
 // 404 handling
 server.use((req, res, next) => {
-  res.send('404 not found');
+  res.status(404).json({
+    status: 404,
+    msg: 'Not Found'
+  });
   next();
 });
 
