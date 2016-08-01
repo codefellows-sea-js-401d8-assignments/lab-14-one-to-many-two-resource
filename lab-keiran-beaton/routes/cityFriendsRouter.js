@@ -4,7 +4,7 @@ const jsonParser = require('body-parser').json();
 const express = require('express');
 const handleError = require('../lib/handleError');
 
-let cityFriendsRouter = express.Router();
+let cityFriendsRouter = module.exports = exports = express.Router();
 
 let findCity = function(req, res, next) {
   City.findOne({'_id': req.params.cityId})
@@ -26,6 +26,6 @@ cityFriendsRouter.put('/:id', jsonParser, findCity, (req, res, next) => {
   req.city.addFriend(req.params.id).then(res.json.bind(res), handleError(404, next, 'No Such Friend'));
 });
 
-cityFriendsRouter.delete('/:id', jsonParser, findCity, (req, res, next) => {
+cityFriendsRouter.delete('/:id', findCity, (req, res, next) => {
   req.city.removeFriend(req.params.id).then(res.json.bind(res), handleError(404, next, 'No Such Friend'));
 });
