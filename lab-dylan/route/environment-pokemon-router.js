@@ -19,9 +19,6 @@ environmentPokemonRouter.get('/', findEnv, (req, res, next) => {
   req.env.findAllPokemon().then(res.json.bind(res), appError(400, next));
 });
 
-environmentPokemonRouter.get('/:envId/pokemon/:id', findEnv, (req, res, next) => {
-  req.env.findOnePokemon({'_id': req.params.id}).then(res.json.bind(res), appError(404, next, 'Not Found'));
-});
 environmentPokemonRouter.post('/', jsonParser, findEnv, (req, res, next) => {
   req.env.addPokemon(req.body).then(res.json.bind(res), appError(400, next));
 });
