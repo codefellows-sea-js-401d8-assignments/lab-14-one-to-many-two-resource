@@ -8,9 +8,9 @@ const request = chai.request;
 const port = 5000;
 const afterStuff = require('./after.js');
 
-process.env.mongoTestServer = 'mongodb://localhost/pokemon_test';
+process.env.mongoTestServer = 'mongodb://localhost/author_test';
 
-describe('CRUD API (with Express!) ', () => {
+describe('One to Many Database,) ', () => {
   let server;
   before(function(done) {
     server = require('../lib/_server.js').listen(port, () => console.log('server up on ' + port));
@@ -33,7 +33,7 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 2: should return a status code of 404 for a GET request with a valid request with an id that was not found', (done) => {
     request('localhost:' + port + '/api')
-      .get('/pokemon/ivysaur')
+      .get('/author/shakespeare')
       .end(function(err) {
         expect(err).to.have.status(404, 'File Not Found');
         done();
@@ -42,7 +42,7 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 3: should return a status code of 400 for GET requests with no id', (done) => {
     request('localhost:' + port + '/api')
-      .get('/pokemon/')
+      .get('/author/')
       .end(function(err) {
         expect(err).to.have.status(400, 'No id provided');
         done();
@@ -51,10 +51,10 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 4: should return a status code of 200 for a POST if there is a valid body', (done) => {
     request('localhost:' + port + '/api')
-      .post('/pokemon/')
+      .post('/author/')
       .send({
-        name: 'charmander',
-        type: 'fire'
+        name: 'william shakespeare',
+        genre: 'theatrical'
       })
       .end(function(err, res) {
         expect(err).to.eql(null, 'the error should be null');
@@ -65,7 +65,7 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 5: should return a status code of 200 for a GET request with a valid id', (done) => {
     request('localhost:' + port + '/api')
-      .get('/pokemon/charmander')
+      .get('/author/shakespeare')
       .end(function(err, res) {
         expect(err).to.eql(null, 'the error should be null');
         expect(res).to.have.status(200, 'the status code should be 200');
@@ -75,7 +75,7 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 6: should return a status code of 400 for a POST request if no/invalid body provided', (done) => {
     request('localhost:' + port + '/api')
-      .post('/pokemon/')
+      .post('/author/')
       .end(function(err) {
         expect(err).to.have.status(400, 'no body provided');
         done();
@@ -84,26 +84,21 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 7: should return a status code of 200 for a PUT request with a valid body', (done) => {
     request('localhost:' + port + '/api')
-      .put('/pokemon/charmander')
+      .put('/author/shakespeare')
       .send({
-        name: 'pikachu',
-        type: 'lightning'
+        name: 'stephen king',
+        type: 'horror'
       })
       .end(function(err, res) {
         expect(err).to.eql(null, 'the error should be null');
         expect(res).to.have.status(200, 'the status should be 200');
-        // done();
-      });
-    request('localhost:' + port + '/api')
-      .delete('/pokemon/charmander')
-      .end(function() {
         done();
       });
   });
 
   it('test 8: should return a status code of 400 for a PUT request if no/invalid body provided', (done) => {
     request('localhost:' + port + '/api')
-      .put('/pokemon/squirtle')
+      .put('/author/shakespeare')
       .end(function(err) {
         expect(err).to.have.status(400, 'no body provided');
         done();
@@ -112,12 +107,10 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 9: should return a status code of 404 for a valid PUT request with an id that was not found', (done) => {
     request('localhost:' + port + '/api')
-      .put('/pokemon/ivysaur')
+      .put('/author/dickens')
       .send({
-        name: 'Justin Bieber',
-        type: 'Pop Singer',
-        'final evolution': 'off the charts',
-        uuid: 'the Biebs'
+        name: 'edgar allan poe',
+        genre: 'poetry'
       })
       .end(function(err) {
         expect(err).to.have.status(404, 'the status should be 404');
@@ -127,12 +120,12 @@ describe('CRUD API (with Express!) ', () => {
 
   it('test 10: should return a status code of 400 for a valid "DELETE" request ', (done) => {
     request('localhost:' + port + '/api')
-      .delete('/pokemon/charmander')
+      .delete('/author/shakespeare')
       .end(function() {
         done();
       });
     request('localhost:' + port + '/api')
-      .get('/pokemon/charmander')
+      .get('/author/shakespeare')
       .end(function(err) {
         expect(err).to.have.status(404, 'the status should be 404');
       });
