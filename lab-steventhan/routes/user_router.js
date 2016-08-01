@@ -2,10 +2,9 @@
 
 const Router = require('express').Router;
 const User = require('../model/user');
-const mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
 const jsonParser = require('body-parser').json();
 const AppError = require('../lib/app_error');
+const userOrderRouter = require('./user_order_router');
 
 let userRouter = new Router();
 
@@ -46,7 +45,7 @@ userRouter.put('/:id', jsonParser, (req, res, next) => {
   let parsedJson = req.body;
   let _id = req.params.id;
   if (parsedJson.firstName && parsedJson.lastName && parsedJson.email) {
-    User.findOneAndUpdate({_id}, parsedJson)
+    User.findByIdAndUpdate({_id}, parsedJson)
       .then((data) => {
         if (!data) return next(AppError.new404('Not Found', `Invalid user id: ${_id} from input.`));
         return res.json(data);
@@ -70,4 +69,19 @@ userRouter.delete('/:id', (req, res, next) => {
       next(AppError.new404('Not Found', `Invalid user id: ${_id} from input. ${error.message}`));
     });
 });
+
+// Use chain userOrderRouter after userRouter
+userRouter.use('/:userId/orders', (req, res, next) => {
+  let _id = req.params.userId;
+  User.findOne({_id})
+    .then((data) => {
+      if (!data) return next(AppError.new404('User Id Not Found', `Invalid user id: ${_id} from input.`));
+      req.user = data;
+      next();
+    })
+    .catch((error) => {
+      next(AppError.new404('User Id Not Found', `Invalid user id: ${_id} from input. ${error.message}`));
+    });
+}, userOrderRouter);
+
 module.exports = userRouter;

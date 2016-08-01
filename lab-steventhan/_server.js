@@ -2,6 +2,7 @@
 
 const server =  require('express')();
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const userRouter = require('./routes/user_router');
 const orderRouter = require('./routes/order_router');
 const errorResponse = require('./lib/error_response');
@@ -29,6 +30,7 @@ server.use((req, res, next) => {
 // 500 handling
 server.use((err, req, res, next) => {
   res.sendError(err);
+  next(err);
 });
 
 module.exports = server;

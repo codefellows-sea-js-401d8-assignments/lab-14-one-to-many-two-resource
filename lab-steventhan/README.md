@@ -1,4 +1,4 @@
-## CRUD api for personal portfolio projects
+## Two-resource-CRUD api for an e-commerce website
 ## Changes
 Mongodb is used in place of in-memory storage
 
