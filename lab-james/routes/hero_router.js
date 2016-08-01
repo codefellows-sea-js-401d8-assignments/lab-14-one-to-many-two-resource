@@ -11,7 +11,7 @@ heroRouter.get('/all', (req, res) => {
     if (err)
       return res.sendError(AppError.status400('Bad request'));
     if (hero.length === 0)
-      return res.sendError(AppError.status404('No heroes found'));
+      return res.json('No heroes exist at this time');
     res.json(hero);
   });
 });

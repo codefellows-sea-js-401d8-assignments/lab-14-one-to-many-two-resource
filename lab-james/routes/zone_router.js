@@ -12,7 +12,7 @@ zoneRouter.get('/all', (req, res) => {
     if (err)
       return res.sendError(AppError.status400('Bad request'));
     if(zone.length === 0)
-      return res.sendError(AppError.status404('No zones found'));
+      return res.json('No zones exist at this time');
     res.json(zone);
   });
 });
@@ -59,6 +59,6 @@ zoneRouter.delete('/:id', jsonParser, (req, res) => {
 });
 
 zoneRouter.use('/:zoneId/hero', heroZoneRouter, (err, req, res, next) => {
-  if (err) return res.sendError(AppError.status404('Zone does not exist'));
+  if (err) return res.sendError(AppError.status404('Zone not found'));
   next();
 });

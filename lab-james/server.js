@@ -2,8 +2,9 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const morgan = require('morgan');
 const Promise = require('./lib/promise');
+
+const morgan = require('morgan');
 const AppError = require('./lib/app_error');
 const errorResponse = require('./lib/error_response');
 
@@ -19,7 +20,7 @@ app.use('/api/hero', heroRouter);
 app.use('/api/zone', zoneRouter);
 
 app.use((req, res) => {
-  return res.sendError(AppError.status404('page not found'));
+  return res.sendError(AppError.status404('Page not found'));
 });
 
 app.listen(3000, () => console.log('server is up'));
