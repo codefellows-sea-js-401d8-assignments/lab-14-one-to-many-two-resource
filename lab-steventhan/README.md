@@ -23,11 +23,11 @@ Mongodb is used in place of in-memory storage
 ## User-Order Usage:
   * Navigate to folder `lab-steventhan`
   * Run `node server` to start server
-  * To CREATE a new user run `cat test/order-sample.json | http localhost:3000/api/users/<valid user id>/orders` from the command line, it should appears at `localhost:3000/api/orders/all`
-  * To READ all projects, in browser, navigate to `localhost:3000/api/orders/all`,
-  * To READ 1 project in browser, navigate to `localhost:3000/api/orders/<valid id>`.
-  * To UPDATE an existing project run `cat sample-project.json | http PUT localhost:3000/api/orders/<valid id>`, this should update the dummy project with new data from `sample-project.json`
-  * To DESTROY a project run `http DELETE localhost:3000/api/orders/<valid id>`
+  * To CREATE a new user run `cat test/order-sample.json | http localhost:3000/api/users/<valid user id>/orders` from the command line, it should appears at `localhost:3000/api/<valid user id>/orders`
+  * To READ all projects, in browser, navigate to `localhost:3000/api/<valid user id>/orders`,
+  * To READ 1 project in browser, navigate to `localhost:3000/api/orders/<valid id>`, the userId should be the `<valid user id> `that used in the post method.
+  * To remove a order from a user run `http DELETE localhost:3000/api/users/<valid user id>/<valid order id>`
+  * To assign a order to a user run `http PUT localhost:3000/api/users/<valid user id>/<valid order id>`
 
 ## Test:
   * Install devDependencies
