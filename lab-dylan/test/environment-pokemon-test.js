@@ -54,11 +54,10 @@ describe('CRUD altering environment tests', () => {
 
   it('should GET an pokemon with _id in environment with _id', (done) => {
     request('localhost:5000')
-      .get('/api/environment/' + testEnv._id + '/pokemon/' + testPokemon._id)
+      .get('/api/environment/' + testEnv._id + '/pokemon')
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res.status).to.eql(200);
-        // expect(res.body.location).to.eql('Mt. Rainier');
         done();
       });
   });
@@ -70,6 +69,16 @@ describe('CRUD altering environment tests', () => {
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res.status).to.eql(200);
+        done();
+      });
+  });
+
+  it('should test badpath from environment-pokemon-router', (done) => {
+    request('localhost:5000')
+      .get('/api/environment/' + testEnv._id + '/badpath')
+      .end((err, res) => {
+        expect(err).to.not.eql(null);
+        expect(res.statusCode).to.eql(404);
         done();
       });
   });
