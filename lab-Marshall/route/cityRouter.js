@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express');
-const City = require('../lib/city');
+const City = require('../model/city');
 const jsonParser = require('body-parser').json();
-const HandleError = require('../model/handleError');
+const HandleError = require('../lib/handleError');
 
 let cityPeopleRouter = require('./cityPeopleRouter');
 let cityRouter = module.exports = exports = express.Router();

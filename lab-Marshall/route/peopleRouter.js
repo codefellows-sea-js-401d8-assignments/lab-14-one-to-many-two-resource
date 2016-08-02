@@ -1,9 +1,9 @@
 'use strict';
 
-const People = require('../lib/people');
+const People = require('../model/people');
 const express = require('express');
 const jsonParser = require('body-parser').json();
-const handleError = require('../model/handleError');
+const handleError = require('../lib/handleError');
 
 let peopleRouter = module.exports = exports = express.Router();
 

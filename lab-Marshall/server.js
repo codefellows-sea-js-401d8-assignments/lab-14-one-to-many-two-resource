@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const Promise = require('./model/promise');
+const Promise = require('./lib/promise');
 const debug = require('debug');
 const serverError = debug('cfdemo:servererror');
 

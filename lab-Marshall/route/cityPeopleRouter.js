@@ -1,8 +1,8 @@
 'use strict';
-const City = require('../lib/city');
+const City = require('../model/city');
 const jsonParser = require('body-parser').json();
 const express = require('express');
-const HandleError = require('../model/handleError');
+const HandleError = require('../lib/handleError');
 
 let cityPeopleRouter = module.exports = exports = express.Router({mergeParams: true});
 let findCity = function(req, res, next) {
