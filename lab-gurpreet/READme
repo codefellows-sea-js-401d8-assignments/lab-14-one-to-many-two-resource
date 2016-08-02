@@ -1,0 +1,20 @@
+As a developer:-
+
+      clone down the repository
+        run npm i to install package.json.
+
+      To run the mongodb in the terminal type
+        mongod --dbpath db
+
+      To start the server type
+        node server.js
+
+      To run the test you can run the test by typing in the terminal.
+
+        mocha or gulp
+
+    Open a new tab in the command line and run 'mongo', then 'use my_db'
+    Send a POST request in another tab with: http POST :3000/api/user {'name': , 'active': , 'date': };
+    Send a GET request with: http GET :3000/api/user/
+    Send a PUT request with: http PUT :3000/api/user/ {'name': , 'active': , 'date': }
+    Bonus: Send a GET request to list all users with with: http GET :3000/api/all
