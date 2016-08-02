@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 
 const bookSchema = new Schema({
   title: String,
-  bookNumber: String,
-  authorId: {type:String, require:true}
+  bookNumber: Number,
+  authorName: String
 });
 
 let Book = mongoose.model('Book', bookSchema);

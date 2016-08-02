@@ -18,7 +18,6 @@ let findAuthor = function(req, res, next) {
 
 authorBookRouter.get('/', findAuthor, (req, res) => {
   req.author.getAllBooks().then((book) => {
-    console.log(req.author);
     if (!book) return res.sendError(AppError.error404('Author has no associated books.'));
     res.json(book);
   });
@@ -31,15 +30,15 @@ authorBookRouter.post('/', jsonParser, findAuthor, (req, res) => {
   });
 });
 
-authorBookRouter.put('/:id', jsonParser, findAuthor, (req, res) => {
-  req.author.addBook(req.params.id).then((book) => {
+authorBookRouter.put('/:title', jsonParser, findAuthor, (req, res) => {
+  req.author.addBook(req.params.title).then((book) => {
     if (!book) return res.sendError(AppError.error404('Book not found.'));
     res.status(200).json({msg:'success!'});
   });
 });
 
-authorBookRouter.delete('/:id', findAuthor, (req, res) => {
-  req.author.removeBook(req.params.id).then((book) => {
+authorBookRouter.delete('/:title', findAuthor, (req, res) => {
+  req.author.removeBook(req.params.title).then((book) => {
     if (!book) return res.sendError(AppError.error404('Book not found.'));
     res.status(200).json({msg:'success!'});
   });

@@ -11,20 +11,20 @@ const AuthorSchema = new Schema({
 });
 
 AuthorSchema.methods.getAllBooks = function(){
-  return BookModel.find({authorId: this._id});
+  return BookModel.find({authorName: this.name});
 };
 
 AuthorSchema.methods.addBook = function(bookId){
-  return BookModel.findOneAndUpdate({_id: bookId}, {authorId: this._id});
+  return BookModel.findOneAndUpdate({title: bookId}, {authorName: this.name});
 };
 
 AuthorSchema.methods.removeBook = function(bookId){
-  return BookModel.findOneAndUpdate({'_id': bookId}, {authorId:null});
+  return BookModel.findOneAndUpdate({title: bookId}, {authorName:null});
 };
 
 AuthorSchema.methods.createBook = function(book){
   let Book = new BookModel(book);
-  Book.authorId = this._id;
+  Book.authorName = this.name;
   return Book.save();
 };
 
