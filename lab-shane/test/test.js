@@ -6,8 +6,6 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 const request = chai.request;
 const port = 5000;
-const AuthorModel = require('../model/authorModel.js');
-const BookModel = require('../model/bookModel.js');
 const afterStuff = require('./after.js');
 
 process.env.mongoTestServer = 'mongodb://localhost/author_test';
