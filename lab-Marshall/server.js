@@ -2,21 +2,22 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const Promise = require('./lib/promise');
+const Promise = require('./model/promise');
 const debug = require('debug');
 const serverError = debug('cfdemo:servererror');
 
 mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/bears_dev');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/people_dev');
 
-const forestRouter = require('./routes/forest_router');
-const bearRouter = require('./routes/bear_router');
+const cityRouter = require('./route/cityRouter');
+const peopleRouter = require('./route/peopleRouter');
 
-app.use('/api/forest', forestRouter);
-app.use('/api/bear', bearRouter);
+app.use('/api/city', cityRouter);
+app.use('/api/people', peopleRouter);
 
 app.use((err, req, res, data) => {
   serverError(err);
   res.status(err.statusCode).json(err.message);
 });
-app.listen(process.env.PORT || 3000, () => console.log('server up'));
+
+app.listen(process.env.PORT || 3000, () => console.log('Server up on 3000'));
