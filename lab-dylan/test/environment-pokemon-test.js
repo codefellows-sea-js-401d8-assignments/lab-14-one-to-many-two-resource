@@ -1,0 +1,85 @@
+'use strict';
+
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+chai.use(chaiHttp);
+const request = chai.request;
+const expect = chai.expect;
+
+const mongoose = require('mongoose');
+const Environment = require('../model/environment');
+const Pokemon = require('../model/pokemon');
+var app = require('../server');
+var server;
+
+const TEST_DB_SERVER = 'mongodb://localhost/test_db';
+process.env.DB_SERVER = TEST_DB_SERVER;
+
+describe('CRUD altering environment tests', () => {
+  let testEnv;
+  let testPokemon;
+  before((done) => {
+    server = app.listen(5000, () => {
+      console.log('Server up on 5000');
+    });
+    testPokemon = Pokemon({name:'clepuff', element:'fairy', number:37});
+    testPokemon.save((err, pokemon) => {
+      testPokemon = pokemon;
+    });
+    testEnv = Environment({name:'Mountains', location: 'Mt. Rainier'});
+    testEnv.save((err, env) => {
+      testEnv = env;
+      done();
+    });
+
+  });
+  after((done) => {
+    mongoose.connection.db.dropDatabase(() => {
+      server.close();
+      done();
+    });
+  });
+
+  it('should PUT testPokemon into testEnv', (done) => {
+    testEnv.location = 'Mt. Baker';
+    request('localhost:5000')
+    .put('/api/pokemon/' + testPokemon._id)
+    .send({envId: testEnv._id})
+    .end((err, res) => {
+      expect(err).to.eql(null);
+      expect(res.status).to.eql(200);
+      done();
+    });
+  });
+
+  it('should GET an pokemon with _id in environment with _id', (done) => {
+    request('localhost:5000')
+      .get('/api/environment/' + testEnv._id + '/pokemon')
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res.status).to.eql(200);
+        done();
+      });
+  });
+
+
+  it('should DELETE pokemon from environment', (done) => {
+    request('localhost:5000')
+      .delete('/api/environment/' + testEnv._id + '/pokemon/' + testPokemon._id)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        expect(res.status).to.eql(200);
+        done();
+      });
+  });
+
+  it('should test badpath from environment-pokemon-router', (done) => {
+    request('localhost:5000')
+      .get('/api/environment/' + testEnv._id + '/badpath')
+      .end((err, res) => {
+        expect(err).to.not.eql(null);
+        expect(res.statusCode).to.eql(404);
+        done();
+      });
+  });
+});
