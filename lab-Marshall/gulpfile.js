@@ -4,7 +4,7 @@ const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
 
 var testFiles = ['test/test.js'];
-var appFiles = ['lib/*.js'];
+var appFiles = ['**/*.js'];
 
 gulp.task('default', ['lint:app', 'lint:test', 'mocha:test', 'watch' ], () => {
   console.log('Watch is running');
