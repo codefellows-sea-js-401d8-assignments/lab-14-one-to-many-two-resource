@@ -16,7 +16,6 @@ describe('One to Many Database,', () => {
     server = require('../lib/_server.js').listen(port, () => console.log('server up on ' + port));
     done();
   });
-  //
   after(function(done) {
     afterStuff(server, done);
   });
