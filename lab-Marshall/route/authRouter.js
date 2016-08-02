@@ -3,7 +3,7 @@
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const handleError = require('../lib/handleError');
-const User = require('../model/user');
+const User = require('../model/users');
 const BasicHTTP = require('../lib/basicHTTP');
 
 let authRouter = module.exports = exports = Router();
