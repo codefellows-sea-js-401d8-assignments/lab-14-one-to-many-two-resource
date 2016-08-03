@@ -8,18 +8,3 @@ let Student = module.exports = exports = mongoose.model('Student', {
   favorite: {type: String, default: 'javaScript'},
   schoolId: String
 });
-
-
-
-
-
-// const Schema = mongoose.Schema;
-//
-// const userSchema = new Schema({
-//   name: String,
-//   active: Boolean,
-//   year_added: Number
-// });
-//
-// var User = mongoose.model('User', userSchema);
-// module.exports = User;

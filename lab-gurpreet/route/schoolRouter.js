@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const School = require('../models/school');
+const School = require('../model/school');
 const jsonParser = require('body-parser').json();
 const HandleError = require('../lib/handle_error');
 
