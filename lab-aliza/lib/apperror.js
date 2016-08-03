@@ -1,13 +1,9 @@
 'use strict';
 
-const AppError = function(message, statusCode, resMessage) {
+let AppError = function(message, statusCode, resMessage) {
   this.message = message;
   this.statusCode = statusCode;
   this.resMessage = resMessage;
-};
-
-AppError.prototype.respond = function(res){
-  res.status(this.statusCode).json(this.message);
 };
 
 AppError.hasError = function(err){

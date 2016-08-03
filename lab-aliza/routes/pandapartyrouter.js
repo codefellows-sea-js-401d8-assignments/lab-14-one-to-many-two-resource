@@ -8,24 +8,25 @@ let pandaPartyRouter = module.exports = exports = express.Router({mergeParams: t
 let findParty = function(req, res, next) {
   Party.findOne({'_id': req.params.partyId})
   .then((party) => {
-    if (!party) return res.sendError(AppError.error404('err 404').respond(res), next);(new Error('Party Not Found'));
+    if (!party) return res.sendError(AppError.error404('err 404'), next);
+    (new Error('Party Not Found'));
     req.party = party;
     next();
-  }, res.sendError(AppError.error404('err 404').respond(res)));
+  }, res.sendError(AppError.error404('err 404')));
 };
 
 pandaPartyRouter.get('/', findParty, (req, res, next) => {
-  req.party.findAllPandas().then(res.json.bind(res), res.sendError(AppError.error500('err 500').respond(res)), next);
+  req.party.findAllPandas().then(res.json.bind(res), res.sendError(AppError.error500('err 500')), next);
 });
 
 pandaPartyRouter.post('/', jsonParser, findParty, (req, res, next) => {
-  req.party.makePanda(req.body).then(res.json.bind(res), res.sendError(AppError.error400('err 400').respond(res)), next);
+  req.party.makePanda(req.body).then(res.json.bind(res), res.sendError(AppError.error400('err 400')), next);
 });
 
 pandaPartyRouter.put('/:id', findParty, (req, res, next) => {
-  req.party.addPanda(req.params.id).then(res.json.bind(res), res.sendError(AppError.error404('err 404').respond(res)), next);
+  req.party.addPanda(req.params.id).then(res.json.bind(res), res.sendError(AppError.error404('err 404')), next);
 });
 
 pandaPartyRouter.delete('/:id', findParty, (req, res, next) => {
-  req.party.removePanda(req.params.id).then(res.json.bind(res), res.sendError(AppError.error404('err 404').respond(res)), next);
+  req.party.removePanda(req.params.id).then(res.json.bind(res), res.sendError(AppError.error404('err 404')), next);
 });

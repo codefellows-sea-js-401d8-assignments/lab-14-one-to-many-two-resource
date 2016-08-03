@@ -1,14 +1,17 @@
 'use strict';
 
-const Error = require('./apperror');
+const Error = require('./AppError');
 
-const errorResponse = function() {
-  return (err, req, res, next) => {
-    if (Error.hasError(err)){ res.status(err.statusCode).send(err.resMessage);
-    }
-    res.status(500).send('500 internal server error');
+const errResponse = function() {
+  return (req, res, next) => {
+    res.sendError = (err) => {
+      if (Error.hasError(err)) {
+        return res.status(err.statusCode).send(err.resMessage);
+      }
+      return res.status(500).send(err.message);
+    };
     next();
   };
 };
 
-module.exports = errorResponse;
+module.exports = exports = errResponse;

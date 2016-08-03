@@ -9,20 +9,21 @@ const Promise = require('./lib/promise');
 mongoose.Promise = Promise;
 const debug = require('debug');
 const serverError = debug('serverError');
+const errorResponse = require('./model/errorresponse');
+const AppError = require('./model/AppError');
 
 const LOCAL_DB_SERVER = 'mongodb://localhost/dev_db';
 const DB_SERVER = process.env.DB_SERVER || LOCAL_DB_SERVER;
 const port = 3000;
 
 mongoose.connect(DB_SERVER);
-
+app.use(errorResponse());
 app.use('/api/panda', pandaRouter);
 app.use('/api/party', partyRouter);
 
-app.use((err, req, res, next) => {
-  serverError(err);
-  res.status(err.statusCode).json(err.message);
-  next();
+app.use((req, res) => {
+  serverError('error 404');
+  res.sendError(AppError.error404('not found'));
 });
 
 app.listen(port, () => console.log('server up'));

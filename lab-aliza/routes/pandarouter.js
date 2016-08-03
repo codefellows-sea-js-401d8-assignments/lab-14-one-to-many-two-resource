@@ -13,7 +13,6 @@ let urlParser = bodyParser.urlencoded({
 });
 router.use(jsonParser);
 router.use(urlParser);
-const errResponse = require('../lib/errorresponse');
 
 router.get('/', (req, res) => {
   res.send('Panda DB. Enter /api/panda/<id> or /api/all');
@@ -22,7 +21,7 @@ router.get('/', (req, res) => {
 router.get('/all', (req, res) => {
   Panda.find({})
   .exec((err, pandas) => {
-    if (err) return errResponse(AppError.error404('404').respond(res));
+    if (err) return res.sendError(AppError.error404('err 404'));
     res.status(200).json(pandas);
     serverlog('pandas: ', pandas);
   });
@@ -33,7 +32,7 @@ router.get('/panda/:id', (req, res) => {
     _id: req.params.id
   })
   .exec((err, pandas) => {
-    if (err) return errResponse(AppError.error404('404').respond(res));
+    if (err) return res.sendError(AppError.error404('err 404'));
     serverlog('pandas: ', pandas);
     res.status(200).json(pandas);
   });
@@ -42,7 +41,7 @@ router.get('/panda/:id', (req, res) => {
 router.post('/panda', jsonParser, (req, res) => {
   let newPanda = new Panda(req.body);
   newPanda.save((err, panda) => {
-    if(!req.body.name || !req.body.happy || !req.body.age) return errResponse(AppError.error400('400').respond(res));
+    if(!req.body.name || !req.body.happy || !req.body.age) return res.sendError(AppError.error400('err 400'));
     serverlog('panda: ', panda);
     return res.status(200).send(panda);
   });
@@ -58,8 +57,8 @@ router.put('/panda/:id', jsonParser, (req, res) => {
       happy: req.body.happy
     }
   }, {upsert: true}, (err, newPanda) => {
-    if (err) return errResponse(AppError.error400('400').respond(res));
-    if (!req.params.id) return errResponse(AppError.error404('404').respond(res));
+    if (err) return res.sendError(AppError.error400('err 400'));
+    if (!req.params.id) return res.sendError(AppError.error404('err 404'));
     res.status(200).send(newPanda);
     serverlog('updated panda: ', newPanda);
   });
@@ -69,7 +68,7 @@ router.delete('/panda/:id', (req, res) => {
   Panda.findOneAndRemove({
     _id: req.params.id
   }, (err, panda) => {
-    if(err) return errResponse(AppError.error404('404').respond(res));
+    if(err) return res.sendError(AppError.error404('err 404'));
     return res.status(204).json(panda);
   });
 });
