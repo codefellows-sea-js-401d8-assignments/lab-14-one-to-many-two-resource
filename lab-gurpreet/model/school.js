@@ -7,21 +7,21 @@ let schoolSchema = mongoose.Schema({
   location: String
 });
 
-schoolSchema.methods.buildAstudent = function(studentData) {
+schoolSchema.methods.buildAStudent = function(studentData) {
   let student = new Student (studentData);
   student.schoolId = this._id;
   return student.save();
 };
 
-schoolSchema.methods.addstudent = function(studentId) {
+schoolSchema.methods.addStudent = function(studentId) {
   return Student.findOneAndUpdate({'_id': studentId}, {schoolId: this._id});
 };
 
-schoolSchema.methods.removestudent = function(studentId) {
+schoolSchema.methods.removeStudent = function(studentId) {
   return Student.findOneAndUpdate({'_id': studentId}, {schoolId: null});
 };
 
-schoolSchema.methods.findAllstudents = function() {
+schoolSchema.methods.findAllStudents = function() {
   return Student.find({schoolId: this._id});
 };
 
