@@ -1,0 +1,24 @@
+As a developer:-
+
+      clone down the repository
+        run npm i to install package.json.
+
+      To run the mongodb in the terminal type
+        mongod --dbpath db
+
+      To start the server type
+        node server.js
+
+      
+
+    Open a new tab in the command line and run 'mongo', then 'use my_db'
+    open a new tab in terminal and type following commands t run the test:-
+
+    Send a POST request for student in another tab with: http POST :3000/api/student name=gurpreet;
+    send a POST request for school in another tab with: http POST :3000/api/school name="code fellows" location=seattle
+    you should get student info with ID and should get student info with different ID.
+    Send a GET request with: http GET :3000/api/student/
+    Send a PUT request with: http PUT :http PUT :3000/api/school/ID(actual id code)/student/ID (actual id code)
+    it will display student and school info together.
+
+    Bonus: Send a GET request to list all users with with: http GET :3000/api/all
