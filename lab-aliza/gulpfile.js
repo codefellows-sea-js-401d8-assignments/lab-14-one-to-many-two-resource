@@ -3,69 +3,33 @@ const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const nodemon = require('gulp-nodemon');
 const testFiles = ['./test/*.js'];
-const appFiles = ['./model/*.js', './lib/*js', './*.js'];
+const appFiles = ['./lib/*.js', './*.js', './routes/*.js', './models/*.js'];
 
-gulp.task('lint', () => {
+gulp.task('eslint', () => {
   gulp.src(appFiles)
-    .pipe(eslint({
-      rules: {
-        'no-console': 0,
-        'indent': [
-          2,
-          2
-        ],
-        'quotes': [
-          2,
-          'single'
-        ],
-        'linebreak-style': [
-          2,
-          'unix'
-        ],
-        'semi': [
-          2,
-          'always'
-        ]
-      },
-      envs: [
-        'es6',
-        'node',
-        'browser'
-      ],
-      globals: [
-        'describe',
-        'it',
-        'beforeEach',
-        'afterEach',
-        'before',
-        'after'
-      ],
-      ecmaFeatures: {
-        'modules': true,
-        'experimentalObjectRestSpread': true,
-        'impliedStrict': true
-      },
-      extends: 'eslint:recommended'
-    }))
-        .pipe(eslint.format());
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
-gulp.task('test', () => {
+gulp.task('mocha', () =>
   gulp.src(testFiles)
-    .pipe(mocha());
-});
+    .pipe(mocha())
+    .once('error', () => {
+      process.exit(1);
+    })
+    .once('end', () => {
+      process.exit();
+    })
+);
 
 gulp.task('nodemon', () => {
-  nodemon({ script: 'server.js'})
+  nodemon({ script: './server'})
     .on('restart', () => {
       console.log('restarted!');
     });
 });
 
-gulp.task('default', ['lint', 'test'], () => {
+gulp.task('default', ['eslint', 'mocha'], () => {
   console.log('default for eslint and mocha');
-});
-
-gulp.task('watch', () => {
-  gulp.watch(testFiles, appFiles, ['eslint', 'mocha']);
 });
