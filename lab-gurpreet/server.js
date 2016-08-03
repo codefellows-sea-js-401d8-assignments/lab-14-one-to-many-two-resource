@@ -16,8 +16,9 @@ const studentRouter = require('./route/studentRouter.js');
 
 app.use('/api/school', schoolRouter);
 app.use('/api/student', studentRouter);
-app.use((err, req, res, data) => {
+app.use((err, req, res, next) => {
   serverError(err);
+  next();
   res.status(err.statusCode).json(err.message);
 });
 
