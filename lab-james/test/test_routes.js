@@ -8,11 +8,12 @@ const mongoose = require('mongoose');
 
 const Hero = require('../model/hero');
 const Zone = require('../model/zone');
-var app = require('./test_server');
-let server;
 
 const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
+
+var app = require('./test_server');
+let server;
 
 let testHero;
 let testHero2;
