@@ -7,7 +7,8 @@ const request = chai.request;
 const expect = chai.expect;
 
 const mongoose = require('mongoose');
-const Panda = require('../model/pandaschema');
+const Panda = require('../models/pandaschema');
+const Party = require('../models/partyschema');
 var app = require('../server');
 let server;
 
