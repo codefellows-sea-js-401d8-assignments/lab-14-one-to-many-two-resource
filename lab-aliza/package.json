@@ -1,0 +1,32 @@
+{
+  "name": "lab-aliza",
+  "version": "1.0.0",
+  "description": "Lab 11 Single Resource Express/Mongo API",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Aliza Pilisuk",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "debug": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-mocha": "^2.2.0",
+    "gulp-nodemon": "^2.1.0",
+    "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "express": "^4.14.0",
+    "mongoose": "^4.5.7",
+    "morgan": "^1.7.0"
+  }
+}
