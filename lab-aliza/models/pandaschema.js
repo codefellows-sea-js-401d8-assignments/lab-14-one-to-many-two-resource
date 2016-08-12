@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const PandaSchema = new Schema({
   name: String,
   age: Number,
-  happy: Boolean
+  happy: Boolean,
+  partyId: String
 });
 
 module.exports = exports = mongoose.model('Panda', PandaSchema);

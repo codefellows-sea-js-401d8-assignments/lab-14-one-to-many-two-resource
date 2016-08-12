@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Panda = require('./pandaschema');
 
 let PartySchema = mongoose.Schema({
-  name: {type: String, required: true, unique: true},
+  theme: String,
   location: String
 });
 

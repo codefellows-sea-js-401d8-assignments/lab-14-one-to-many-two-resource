@@ -1,76 +1,31 @@
+
 'use strict';
 
 const Router = require('express').Router;
-const debug = require('debug');
-const serverlog = debug('serverlog');
-const AppError = require('../lib/apperror');
-const Panda = require('../models/pandaschema');
-let router = Router();
-var bodyParser = require('body-parser');
-let jsonParser = bodyParser.json();
-let urlParser = bodyParser.urlencoded({
-  extended: true
-});
-router.use(jsonParser);
-router.use(urlParser);
+const HandleError = require('../lib/apperror');
+const PandaSchema = require('../models/pandaschema');
+const jsonParser = require('body-parser').json();
+let pandaRouter = Router();
 
-router.get('/', (req, res) => {
-  res.send('Panda DB. Enter /api/panda/<id> or /api/all');
-});
-
-router.get('/all', (req, res) => {
-  Panda.find({})
-  .exec((err, pandas) => {
-    if (err) return res.sendError(AppError.error404('err 404'));
-    res.status(200).json(pandas);
-    serverlog('pandas: ', pandas);
+pandaRouter.post('/newpanda', jsonParser, (req, res, next) => {
+  let newPanda = new PandaSchema({'name': req.body.name, 'age': req.body.age, 'happy': req.body.happy});
+  newPanda.save((err, pandaData) => {
+    if (err) return next(err);
+    res.send(pandaData);
   });
 });
 
-router.get('/panda/:id', (req, res) => {
-  Panda.findOne({
-    _id: req.params.id
-  })
-  .exec((err, pandas) => {
-    if (err) return res.sendError(AppError.error404('err 404'));
-    serverlog('pandas: ', pandas);
-    res.status(200).json(pandas);
-  });
+pandaRouter.get('/:pandaid', (req, res, next) => {
+  let DBError = HandleError(400, next, 'invalid id');
+  let Err404 = HandleError(404, next);
+  PandaSchema.findOne({'_id': req.params.pandaId}).then((data) => {
+    if (!data) return next(Err404(new Error('Panda not found.')));
+    res.json(data);
+  }, DBError);
 });
 
-router.post('/panda', jsonParser, (req, res) => {
-  let newPanda = new Panda(req.body);
-  newPanda.save((err, panda) => {
-    if(!req.body.name || !req.body.happy || !req.body.age) return res.sendError(AppError.error400('err 400'));
-    serverlog('panda: ', panda);
-    return res.status(200).send(panda);
-  });
+pandaRouter.get('/allpandas', (req, res, next) => {
+  PandaSchema.find().then(res.json.bind(res), HandleError(500, next, 'Server Error'));
 });
 
-router.put('/panda/:id', jsonParser, (req, res) => {
-  Panda.findOneAndUpdate({
-    _id: req.params.id
-  },
-    { $set: {
-      name: req.body.name,
-      age: req.body.age,
-      happy: req.body.happy
-    }
-  }, {upsert: true}, (err, newPanda) => {
-    if (err) return res.sendError(AppError.error400('err 400'));
-    if (!req.params.id) return res.sendError(AppError.error404('err 404'));
-    res.status(200).send(newPanda);
-    serverlog('updated panda: ', newPanda);
-  });
-});
-
-router.delete('/panda/:id', (req, res) => {
-  Panda.findOneAndRemove({
-    _id: req.params.id
-  }, (err, panda) => {
-    if(err) return res.sendError(AppError.error404('err 404'));
-    return res.status(204).json(panda);
-  });
-});
-
-module.exports = router;
+module.exports = exports = pandaRouter;
