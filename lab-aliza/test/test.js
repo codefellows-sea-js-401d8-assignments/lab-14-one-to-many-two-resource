@@ -14,18 +14,16 @@ const TEST_DB_SERVER = 'mongodb://localhost/test_db';
 process.env.DB_SERVER = TEST_DB_SERVER;
 
 describe('CRUD tests', () => {
-  let newParty, newPanda, partyId, pandaId;
+  let newParty, newPanda;
   before(function(done){
     app.listen(5000, () => {
       console.log('Server up on 5000');
     });
     newParty = PartySchema({theme:'costume', location: 'Seattle'});
-    partyId = newParty._id;
     newParty.save((err, party) => {
       newParty = party;
     });
     newPanda = PandaSchema({name:'aliza', age: 27, happy: true});
-    pandaId = newPanda._id;
     newPanda.save((err, panda) => {
       newPanda = panda;
       done();
@@ -102,18 +100,19 @@ describe('CRUD tests', () => {
       });
   });
 
-  it('PUT request', (done) => {
+  it('GET panda', (done) => {
     request('localhost:5000')
-      .put('/api/party/' + partyId + '/panda/' + pandaId)
+      .get('/api/panda/' + newPanda._id)
       .end((err, res) => {
-        expect(res.status).to.eql(404);
+        expect(err).to.eql(null);
+        expect(res.body.name).to.eql('aliza');
         done();
       });
   });
 
   it('DELETE party', (done) => {
     request('localhost:5000')
-      .delete('/api/party/' + partyId)
+      .delete('/api/party/' + newParty._id)
       .end((err, res) => {
         expect(err).to.eql(null);
         expect(res.status).to.eql(200);

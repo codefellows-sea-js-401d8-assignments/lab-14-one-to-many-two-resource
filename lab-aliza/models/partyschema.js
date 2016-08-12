@@ -9,7 +9,7 @@ let PartySchema = mongoose.Schema({
 
 PartySchema.methods.makePanda = function(pandaData) {
   let panda = new Panda(pandaData);
-  panda.partyId = this._id;
+  Panda.partyId = this._id;
   return panda.save();
 };
 

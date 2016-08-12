@@ -18,7 +18,7 @@ pandaRouter.post('/newpanda', jsonParser, (req, res, next) => {
 pandaRouter.get('/:pandaid', (req, res, next) => {
   let DBError = HandleError(400, next, 'invalid id');
   let Err404 = HandleError(404, next);
-  PandaSchema.findOne({'_id': req.params.pandaId}).then((data) => {
+  PandaSchema.findOne({'_id': req.params.pandaid}).then((data) => {
     if (!data) return next(Err404(new Error('Panda not found.')));
     res.json(data);
   }, DBError);
