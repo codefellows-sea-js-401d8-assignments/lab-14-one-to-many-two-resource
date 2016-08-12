@@ -30,13 +30,13 @@ describe('CRUD tests', () => {
     });
   });
 
-  after((done) =>{
+  after((done) => {
     mongoose.connection.db.dropDatabase(()=>{
       mongoose.disconnect(() => {
         app.close();
-        done();
       });
     });
+    done();
   });
 
   it('should POST a new party', (done) => {
