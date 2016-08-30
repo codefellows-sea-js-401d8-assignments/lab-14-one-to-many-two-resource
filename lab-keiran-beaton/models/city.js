@@ -21,8 +21,8 @@ CitySchema.methods.removeFriend = function(friendId) {
   return Friend.findOneAndUpdate({'_id': friendId}, {cityId: null});
 };
 
-CitySchema.methods.findAllFriend = function() {
-  return Friend.find({forestId: this._id});
+CitySchema.methods.findAllFriends = function() {
+  return Friend.find({cityId: this._id});
 };
 
-let City = module.exports = exports = mongoose.model('city', CitySchema);
+module.exports = exports = mongoose.model('city', CitySchema);
