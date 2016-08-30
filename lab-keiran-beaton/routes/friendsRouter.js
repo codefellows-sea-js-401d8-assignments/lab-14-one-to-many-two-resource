@@ -10,6 +10,10 @@ friendRouter.get('/', (req, res, next) => {
   Friend.find().then(res.json.bind(res), HandleError(500, next, 'Server Error'));
 });
 
+friendRouter.get('/:id', (req, res, next) => {
+  Friend.findOne({_id: req.params.id}).then(res.json.bind(res), HandleError(404, next, 'Not Found'));
+});
+
 friendRouter.post('/', jsonParser, (req, res, next) => {
   Friend(req.body).save().then(res.json.bind(res), HandleError(400, next));
 });
